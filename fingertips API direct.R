@@ -3,7 +3,8 @@ library(data.table)
 
 # gets indicator details direct from API as fingertipsR is no longer on cran
 
-# group names & numbers
+# indicators come as a profile & each profile contains groups (ie dropdown on the profile on the website to change pages)
+# indicator group names & numbers
     local_health_metadata <- httr::GET("https://fingertips.phe.org.uk/api/profile?profile_id=143")$content %>%
       rawToChar() %>%
       jsonlite::fromJSON(flatten = TRUE) %>%
