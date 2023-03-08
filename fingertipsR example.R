@@ -7,11 +7,11 @@
   library(lubridate)
   
 # # # get a list of all live indicators
-#   fingertips_live_indicators <- fingertipsR::indicators()
-#   write.csv(fingertips_live_indicators, "fingertips_live_indicators.csv")
+  fingertips_live_indicators <- fingertipsR::indicators()
+  write.csv(fingertips_live_indicators, "fingertips_live_indicators.csv")
   
 # details of just wanted indicators
-  # my_live_indicators <- fingertips_live_indicators[fingertips_live_indicators$IndicatorID %in% wanted_indicators,]
+  my_live_indicators <- fingertips_live_indicators[fingertips_live_indicators$IndicatorID %in% wanted_indicators,]
   
   # list of wanted indicators & areas
   wanted_indicators_df <- data.frame(IndicatorID = c(93085, 92517, 93014, 90366, 90282, 22401, 40401, 30314),
