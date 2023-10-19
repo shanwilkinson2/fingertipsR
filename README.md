@@ -1,4 +1,4 @@
-# fingertipsR
+# fingertips
 
 selection of code using fingertips via the fingertipsR package & from the API direct
 
