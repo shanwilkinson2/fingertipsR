@@ -3,6 +3,14 @@ library(tidyr)
 library(data.table)
 library(ggplot2)
 
+####################################################################################
+# get walking & cycling 3 times per week + from OHID fingertips. 
+# transform to see if there have been significant improvements over the time period covered. 
+# TLDR - not 2015/16-2019/20 but maybe covid related
+# 1 each 2015/16-2018/19. Some non significant increases seen.
+# Survey size likely to be underpowered for detecting the changes likely to be seen. 
+####################################################################################
+
 # gets indicator details direct from API as fingertipsR is no longer on cran
 
 walk_ride <- read.csv("https://fingertips.phe.org.uk/api/all_data/csv/by_indicator_id?indicator_ids=93439%2C93440") %>%
