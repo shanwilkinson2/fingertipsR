@@ -28,8 +28,7 @@ walk_ride2 <- walk_ride %>%
          later_yr4_time_period = shift(time_period, n = 4, type = "lead"),
          later_yr3_lowci = shift(lower_ci_95_0_limit, n = 3, type = "lead"),
          later_yr3_time_period = shift(time_period, n = 3, type = "lead")
-         ) #%>%
-  slice(2)
+         ) 
   
 walk_ride2 <- walk_ride %>%
   select(-c(parent_code, parent_name, sex, age, category, category_type, new_data, 
