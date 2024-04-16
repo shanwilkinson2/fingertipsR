@@ -1,0 +1,61 @@
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+
+# gets indicator details direct from API as fingertipsR is no longer on cran
+
+walk_ride <- read.csv("https://fingertips.phe.org.uk/api/all_data/csv/by_indicator_id?indicator_ids=93439%2C93440") %>%
+  janitor::clean_names() %>%
+  filter(area_type == "UA")
+
+walk_ride2 <- walk_ride %>%
+  select(-c(parent_code, parent_name, sex, age, category, category_type, new_data, 
+            time_period_range, compared_to_goal, column_not_used, recent_trend, 
+            value_note)
+         ) %>%
+  arrange(indicator_id, area_code, time_period_sortable) %>%
+  group_by(indicator_id, area_code) %>%
+  mutate(later_yr4_lowci = shift(lower_ci_95_0_limit, n = 4, type = "lead"),
+         later_yr4_time_period = shift(time_period, n = 4, type = "lead"),
+         later_yr3_lowci = shift(lower_ci_95_0_limit, n = 3, type = "lead"),
+         later_yr3_time_period = shift(time_period, n = 3, type = "lead")
+         ) #%>%
+  slice(2)
+  
+walk_ride2 <- walk_ride %>%
+  select(-c(parent_code, parent_name, sex, age, category, category_type, new_data, 
+            time_period_range, compared_to_goal, column_not_used, recent_trend, 
+            value_note)
+  ) %>%
+  mutate(time_period_sortable = time_period_sortable/10000) %>%
+  pivot_wider(
+    id_cols = c(indicator_name, indicator_id, area_name, area_code),
+    names_from = c(time_period_sortable, time_period_sortable), 
+    values_from = c(value, lower_ci_95_0_limit, upper_ci_95_0_limit)
+    ) %>%
+  mutate(
+    change_15_19 = value_2019-value_2015,
+    sig_improv_15_19 = (upper_ci_95_0_limit_2015<lower_ci_95_0_limit_2019),
+    change_15_18 = value_2018-value_2015,
+    sig_improv_15_18 = (upper_ci_95_0_limit_2015<lower_ci_95_0_limit_2018)
+         )
+
+
+##########
+
+ggplot(walk_ride2) +
+  geom_histogram(aes(x = change_15_19)) +
+  facet_wrap(~indicator_name) +
+  theme_minimal() +
+  labs(y = "Count of upper tier local authorities", 
+       x = "Change 2015/16 - 2019/20") +
+  geom_vline(xintercept = 0)
+
+ggplot(walk_ride2) +
+  geom_histogram(aes(x = change_15_18)) +
+  facet_wrap(~indicator_name) +
+  theme_minimal() +
+  labs(y = "Count of upper tier local authorities", 
+       x = "Change 2015/16 - 2018/19") +
+  geom_vline(xintercept = 0)
+
